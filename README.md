@@ -11,6 +11,7 @@ You will build a software engineering team generator command line application. T
 * [Installation](#installation)
 * [Usage](#usage)
 * [Tests](#Tests)
+* [Credits](#credits)
 * [License](#license)
 
 ## Installation
@@ -31,8 +32,12 @@ npm start
 
 To run the accompanying tests for this application, run the following command:
 ```sh
-npm test
+npm run test
 ```
+
+## Credits
+
+* https://www.npmjs.com/package/inquirer
 
 ## License
 
