@@ -13,12 +13,12 @@ const render = require("./lib/htmlRenderer");
 
 //----------------------------------------------------------------------------------------
 
-async function gatherUserInfo() {
-    const introduction = [
+function gatherUserInfo() {
+    const questions = [
         {
             type: "input",
             message: "What is your name?",
-            name: "userName",
+            name: "name",
             default: "Simon Newton",
             validate: (response) => response.length === 0 ? console.log("Please enter a name.") : true
         },
@@ -26,76 +26,89 @@ async function gatherUserInfo() {
             type: "list",
             message: "What is your role at the company?",
             choices: ["Manager", "Engineer", "Intern"],
-            name: "userRole",
+            name: "role",
             default: 0
         },
         {
             type: "input",
             message: "What is your ID Number?",
-            name: "userID",
-            default: "12345"
+            name: "id",
+            default: "12345",
+            validate: (response) => response.length === 0 ? console.log("Please enter an id number.") : true
         },
         {
             type: "input",
             message: "What is your email address?",
-            name: "userEmail",
+            name: "email",
             default: "simonanewton@gmail.com",
             validate: (response) => response.length === 0 || !response.includes("@") ? console.log("Please enter a valid email address.") : true
-        }
-    ];
-
-    const manager = [
+        },
         {
             type: "input",
             message: "What is your Office Number?",
-            name: "userOffice",
+            name: "office",
             default: "01",
-            validate: (response) => response.length === 0 ? console.log("Please enter an office number.") : true
-        }
-    ];
-
-    const engineer = [
+            validate: (response) => response.length === 0 ? console.log("Please enter an office number.") : true,
+            when: (response) => response.role === "Manager"
+        },
         {
             type: "input",
             message: "What is your GitHub username?",
-            name: "userGitHub",
+            name: "github",
             default: "simonanewton",
-            validate: (response) => response.length === 0 ? console.log("Please enter a GitHub username.") : true
-        }
-    ];
-
-    const intern = [
+            validate: (response) => response.length === 0 ? console.log("Please enter a GitHub username.") : true,
+            when: (response) => response.role === "Engineer"
+        },
         {
             type: "input",
             message: "What school did you attend?",
-            name: "userSchool",
+            name: "school",
             default: "Georgia Tech",
-            validate: (response) => response.length === 0 ? console.log("Please enter a school name.") : true
+            validate: (response) => response.length === 0 ? console.log("Please enter a school name.") : true,
+            when: (response) => response.role === "Intern"
         }
     ];
 
-    console.log("Welcome to the Employee Summary Template Engine!");
-    console.log("-----");
-    const user = await inquirer.prompt(introduction);
-
-    if (user.userRole === "Manager") await inquirer.prompt(manager);
-    else if (user.userRole === "Engineer") await inquirer.prompt(engineer);
-    else if (user.userRole === "Intern") await inquirer.prompt(intern);
-
-    console.log("-----");
+    const user = inquirer.prompt(questions);
 
     return user;
+}
+
+async function promptUser() {
+    console.log("Welcome to the Employee Summary Template Engine!");
+    console.log("-----");
+
+    const userArray = [];
+    const user = await gatherUserInfo();
+
+    switch (user.role) {
+        case "Manager":
+            userArray.push(new Manager(user));
+            break;
+        case "Engineer":
+            userArray.push(new Engineer(user));
+            break;
+        case "Intern":
+            userArray.push(new Intern(user));
+            break;
+    }
+
+    console.log("-----");
+
+    return userArray;
 }
 
 //----------------------------------------------------------------------------------------
 
 async function init() {
-    const userInfo = await gatherUserInfo();
+    const users = await promptUser();
 
-    console.log(userInfo);
+    console.log(users);
 }
 
 init();
+
+//----------------------------------------------------------------------------------------
 
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
