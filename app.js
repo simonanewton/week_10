@@ -88,7 +88,7 @@ async function promptUser() {
 
     async function repeatPrompt() {
         const employee = await gatherUserInfo();
-        
+
         switch (employee.role) {
             case "Manager":
                 employeeArray.push(new Manager(employee));
@@ -105,7 +105,7 @@ async function promptUser() {
             console.log("------")
             repeatPrompt();
         }
-        
+
         else {
             console.log("------");
             console.log("Generating employee summary...");
@@ -119,8 +119,16 @@ async function promptUser() {
 
 //----------------------------------------------------------------------------------------
 
-function writeToFile(fileName, data) {
-    fs.writeFile(fileName, data, (error) => {
+function writeToFile(data) {
+    fs.access(OUTPUT_DIR, (error) => {
+        if (error) {
+            fs.mkdir(OUTPUT_DIR, (error) => {
+                if (error) throw error;
+            })
+        }
+    });
+
+    fs.writeFile(outputPath, data, (error) => {
         if (error) throw error;
 
         console.log("Success!");
@@ -131,15 +139,19 @@ function writeToFile(fileName, data) {
 async function init() {
     const employees = await promptUser();
 
-    // console.log(employees);
-
     const summaryHTML = render(employees);
 
-    // writeToFile(outputPath, summaryHTML);
-    writeToFile("team.html", summaryHTML);
+    writeToFile(summaryHTML);
 }
 
 init();
+
+//----------------------------------------------------------------------------------------
+
+// TO-DO:
+// - fix ability to add multiple employees to the array
+// - add check for existing output folder
+// - run jest tests
 
 //----------------------------------------------------------------------------------------
 
