@@ -45,7 +45,7 @@ function gatherUserInfo() {
         },
         {
             type: "number",
-            name: "office",
+            name: "officeNumber",
             message: "What is the employee's office number?",
             default: "10",
             validate: (answers) => answers.length > 0 ? true : console.log("Please enter an office number."),
@@ -91,13 +91,13 @@ async function promptUser() {
 
         switch (employee.role) {
             case "Manager":
-                employeeArray.push(new Manager(employee));
+                employeeArray.push(new Manager(employee.name, employee.id, employee.email, employee.officeNumber));
                 break;
             case "Engineer":
-                employeeArray.push(new Engineer(employee));
+                employeeArray.push(new Engineer(employee.name, employee.id, employee.email, employee.github));
                 break;
             case "Intern":
-                employeeArray.push(new Intern(employee));
+                employeeArray.push(new Intern(employee.name, employee.id, employee.email, employee.school));
                 break;
         }
 
@@ -150,8 +150,7 @@ init();
 
 // TO-DO:
 // - fix ability to add multiple employees to the array
-// - add check for existing output folder
-// - run jest tests
+// - fix check for existing output folder
 
 //----------------------------------------------------------------------------------------
 
