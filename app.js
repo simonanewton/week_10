@@ -17,93 +17,126 @@ function gatherUserInfo() {
     const questions = [
         {
             type: "input",
-            message: "What is your name?",
             name: "name",
+            message: "What is the employee name?",
             default: "Simon Newton",
-            validate: (response) => response.length === 0 ? console.log("Please enter a name.") : true
+            validate: (answers) => answers.length > 0 ? true : console.log("Please enter a name.")
         },
         {
             type: "list",
-            message: "What is your role at the company?",
-            choices: ["Manager", "Engineer", "Intern"],
             name: "role",
+            message: "What is the employee's role at the company?",
+            choices: ["Manager", "Engineer", "Intern"],
             default: 0
         },
         {
             type: "input",
-            message: "What is your ID Number?",
             name: "id",
+            message: "What is the employee's ID Number?",
             default: "12345",
-            validate: (response) => response.length === 0 ? console.log("Please enter an id number.") : true
+            validate: (answers) => answers.length > 0 ? true : console.log("Please enter an id number.")
         },
         {
             type: "input",
-            message: "What is your email address?",
             name: "email",
+            message: "What is the employee's email address?",
             default: "simonanewton@gmail.com",
-            validate: (response) => response.length === 0 || !response.includes("@") ? console.log("Please enter a valid email address.") : true
+            validate: (answers) => answers.length > 0 || answers.includes("@") ? true : console.log("Please enter a valid email address.")
         },
         {
-            type: "input",
-            message: "What is your Office Number?",
+            type: "number",
             name: "office",
-            default: "01",
-            validate: (response) => response.length === 0 ? console.log("Please enter an office number.") : true,
-            when: (response) => response.role === "Manager"
+            message: "What is the employee's office number?",
+            default: "10",
+            validate: (answers) => answers.length > 0 ? true : console.log("Please enter an office number."),
+            when: (answers) => answers.role === "Manager"
         },
         {
             type: "input",
-            message: "What is your GitHub username?",
             name: "github",
+            message: "What is the employee's GitHub username?",
             default: "simonanewton",
-            validate: (response) => response.length === 0 ? console.log("Please enter a GitHub username.") : true,
-            when: (response) => response.role === "Engineer"
+            validate: (answers) => answers.length > 0 ? true : console.log("Please enter a GitHub username."),
+            when: (answers) => answers.role === "Engineer"
         },
         {
             type: "input",
-            message: "What school did you attend?",
             name: "school",
+            message: "What school did the employee attend?",
             default: "Georgia Tech",
-            validate: (response) => response.length === 0 ? console.log("Please enter a school name.") : true,
-            when: (response) => response.role === "Intern"
+            validate: (answers) => answers.length > 0 ? true : console.log("Please enter a school name."),
+            when: (answers) => answers.role === "Intern"
+        },
+        {
+            type: "confirm",
+            name: "additional",
+            message: "Would you like to add another employee to your company?"
         }
     ];
 
-    const user = inquirer.prompt(questions);
+    const employee = inquirer.prompt(questions);
 
-    return user;
+    return employee;
 }
 
 async function promptUser() {
+    console.log("------");
     console.log("Welcome to the Employee Summary Template Engine!");
-    console.log("-----");
+    console.log("------");
 
-    const userArray = [];
-    const user = await gatherUserInfo();
+    const employeeArray = [];
 
-    switch (user.role) {
-        case "Manager":
-            userArray.push(new Manager(user));
-            break;
-        case "Engineer":
-            userArray.push(new Engineer(user));
-            break;
-        case "Intern":
-            userArray.push(new Intern(user));
-            break;
+    async function repeatPrompt() {
+        const employee = await gatherUserInfo();
+        
+        switch (employee.role) {
+            case "Manager":
+                employeeArray.push(new Manager(employee));
+                break;
+            case "Engineer":
+                employeeArray.push(new Engineer(employee));
+                break;
+            case "Intern":
+                employeeArray.push(new Intern(employee));
+                break;
+        }
+
+        if (employee.additional) {
+            console.log("------")
+            repeatPrompt();
+        }
+        
+        else {
+            console.log("------");
+            console.log("Generating employee summary...");
+        }
     }
 
-    console.log("-----");
+    await repeatPrompt();
 
-    return userArray;
+    return employeeArray;
 }
 
 //----------------------------------------------------------------------------------------
 
-async function init() {
-    const users = await promptUser();
+function writeToFile(fileName, data) {
+    fs.writeFile(fileName, data, (error) => {
+        if (error) throw error;
 
-    console.log(users);
+        console.log("Success!");
+        console.log("------");
+    })
+}
+
+async function init() {
+    const employees = await promptUser();
+
+    // console.log(employees);
+
+    const summaryHTML = render(employees);
+
+    // writeToFile(outputPath, summaryHTML);
+    writeToFile("team.html", summaryHTML);
 }
 
 init();
