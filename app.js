@@ -41,7 +41,7 @@ function gatherEmployeeInfo() {
             name: "email",
             message: "What is the employee's email address?",
             default: "simonanewton@gmail.com",
-            validate: (answer) => answer.length > 0 || answers.includes("@") ? true : console.log("Please enter a valid email address.")
+            validate: (answer) => answer.length > 0 || answer.includes("@") ? true : console.log("Please enter a valid email address.")
         },
         {
             type: "number",
@@ -95,6 +95,9 @@ async function promptUser() {
         employeeArray.push(employeeInfo);
     }
 
+    console.log("------");
+    console.log("Generating employee summary...");
+
     const employees = employeeArray.map((employee) => {
         switch (employee.role) {
             case "Manager":
@@ -106,15 +109,12 @@ async function promptUser() {
         }
     });
 
-    console.log("------");
-    console.log("Generating employee summary...");
-
     return employees;
 }
 
 //----------------------------------------------------------------------------------------
 
-function writeToFile(data) {
+function writeToOutput(data) {
     fs.access(OUTPUT_DIR, (err) => {
         if (err) {
             fs.mkdir(OUTPUT_DIR, (err) => {
@@ -136,7 +136,7 @@ async function init() {
 
     const summaryHTML = render(employees);
 
-    writeToFile(summaryHTML);
+    writeToOutput(summaryHTML);
 }
 
 init();
