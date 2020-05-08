@@ -13,6 +13,7 @@ const render = require("./lib/htmlRenderer");
 
 //----------------------------------------------------------------------------------------
 
+// prompts the user with relevant questions about the employee
 function gatherEmployeeInfo() {
     const questions = [
         {
@@ -79,6 +80,7 @@ function gatherEmployeeInfo() {
     return employee;
 }
 
+// prompts the user with questions about their employees, creates an array of objects for each Employee
 async function promptUser() {
     console.log("------");
     console.log("Welcome to the Employee Summary Template Engine!");
@@ -114,6 +116,7 @@ async function promptUser() {
 
 //----------------------------------------------------------------------------------------
 
+// writes html to the output folder in the root, if no output folder exists, creates one
 function writeToOutput(data) {
     fs.access(OUTPUT_DIR, (err) => {
         if (err) {
@@ -131,6 +134,7 @@ function writeToOutput(data) {
     })
 }
 
+// prompts the user for employee information, renders HTML with that information, writes the HTML to a file in the output folder
 async function init() {
     const employees = await promptUser();
 
