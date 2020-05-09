@@ -2,7 +2,7 @@
 
 ## Description
 
-This application prompts the user to provide information about the employees in their company, then generates an formatted HTML document with a summary of all employee information. The application utilises class structures for each type of employee (Managers, Engineers, and Interns) that are then used when rendering the information with pre-made templates. The user can run included tests that demonstrate the functionality of the class structure to see how the underlying functionality has been constructed. 
+This application prompts the user to provide information about the employees in their company, then generates a formatted HTML document with a summary of all employee information. The application utilises class structures for each type of employee (Managers, Engineers, and Interns) that are then used when rendering the information with pre-made templates. The user can run included tests that demonstrate the functionality of the class structure to see how the underlying functionality has been constructed. 
 
 ## Table of Contents
 
