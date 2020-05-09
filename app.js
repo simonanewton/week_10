@@ -20,7 +20,6 @@ function gatherEmployeeInfo() {
             type: "input",
             name: "name",
             message: "What is the employee name?",
-            default: "Simon Newton",
             validate: (answer) => answer.length > 0 ? true : console.log("Please enter a name.")
         },
         {
@@ -34,21 +33,18 @@ function gatherEmployeeInfo() {
             type: "input",
             name: "id",
             message: "What is the employee's ID Number?",
-            default: "12345",
             validate: (answer) => answer.length > 0 ? true : console.log("Please enter an id number.")
         },
         {
             type: "input",
             name: "email",
             message: "What is the employee's email address?",
-            default: "simonanewton@gmail.com",
-            validate: (answer) => answer.length > 0 || answer.includes("@") ? true : console.log("Please enter a valid email address.")
+            validate: (answer) => answer.length > 0 && answer.includes("@") ? true : console.log("Please enter a valid email address.")
         },
         {
-            type: "number",
+            type: "input",
             name: "officeNumber",
             message: "What is the employee's office number?",
-            default: "10",
             validate: (answer) => answer.length > 0 ? true : console.log("Please enter an office number."),
             when: (answers) => answers.role === "Manager"
         },
@@ -56,7 +52,6 @@ function gatherEmployeeInfo() {
             type: "input",
             name: "github",
             message: "What is the employee's GitHub username?",
-            default: "simonanewton",
             validate: (answer) => answer.length > 0 ? true : console.log("Please enter a GitHub username."),
             when: (answers) => answers.role === "Engineer"
         },
@@ -64,7 +59,6 @@ function gatherEmployeeInfo() {
             type: "input",
             name: "school",
             message: "What school did the employee attend?",
-            default: "Georgia Tech",
             validate: (answer) => answer.length > 0 ? true : console.log("Please enter a school name."),
             when: (answers) => answers.role === "Intern"
         },
@@ -114,7 +108,7 @@ async function promptUser() {
     return employees;
 }
 
-// writes html to the output folder in the root, if no output folder exists, creates one
+// writes html to the output folder, if no output folder exists, creates one
 function writeToOutput(data) {
     fs.access(OUTPUT_DIR, (err) => {
         if (err) {
